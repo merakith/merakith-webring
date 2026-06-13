@@ -1,6 +1,6 @@
 // starter template for webring widget
 // subject to change
-const DATA_FOR_WEBRING = `https://raw.githubusercontent.com/merakith/merakith-webring/refs/heads/main/members.json?token=GHSAT0AAAAAADXFMORSLSGW46UC2GFJ5RUW2RM726Q`;
+const DATA_FOR_WEBRING = `https://raw.githubusercontent.com/merakith/merakith-webring/refs/heads/main/members.json`;
 
 const template = document.createElement("template");
 template.innerHTML = `
@@ -21,9 +21,7 @@ class WebRing extends HTMLElement {
     connectedCallback() {
         this.attachShadow({ mode: "open" });
         this.shadowRoot.appendChild(template.content.cloneNode(true));
-
-        const thisSite = this.getAttribute("site");
-
+        const thisSite = this.getAttribute("site").replace(/\/$/, "");
         fetch(DATA_FOR_WEBRING)
         .then((response) => response.json())
         .then((sites) => {
@@ -36,7 +34,7 @@ class WebRing extends HTMLElement {
             if (prevSiteIndex === -1) prevSiteIndex = sites.length - 1;
 
             let nextSiteIndex = matchedSiteIndex + 1;
-            if (nextSiteIndex > sites.length) nextSiteIndex = 0;
+            if (nextSiteIndex >= sites.length) nextSiteIndex = 0;
 
             const randomSiteIndex = this.getRandomInt(0, sites.length - 1);
 
